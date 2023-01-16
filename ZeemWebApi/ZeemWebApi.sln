@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33205.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ZeemWebApi", "ZeemWebApi\ZeemWebApi.csproj", "{2C8ED5DF-98C9-4456-91DF-419096AE32C7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zeem.Core", "Zeem.Core\Zeem.Core.csproj", "{954649E4-7D86-4543-A423-B2EA962B8292}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Zeem.DomainContracts", "Zeem.DomainContracts\Zeem.DomainContracts.csproj", "{D7B00FD3-1F24-47E1-82D6-1A64F9549801}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Zeem.Data", "Zeem.Data\Zeem.Data.csproj", "{60B235B0-D91C-4F42-86DF-2FC8E5BB2C17}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2C8ED5DF-98C9-4456-91DF-419096AE32C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C8ED5DF-98C9-4456-91DF-419096AE32C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C8ED5DF-98C9-4456-91DF-419096AE32C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C8ED5DF-98C9-4456-91DF-419096AE32C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{954649E4-7D86-4543-A423-B2EA962B8292}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{954649E4-7D86-4543-A423-B2EA962B8292}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{954649E4-7D86-4543-A423-B2EA962B8292}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{954649E4-7D86-4543-A423-B2EA962B8292}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7B00FD3-1F24-47E1-82D6-1A64F9549801}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7B00FD3-1F24-47E1-82D6-1A64F9549801}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7B00FD3-1F24-47E1-82D6-1A64F9549801}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7B00FD3-1F24-47E1-82D6-1A64F9549801}.Release|Any CPU.Build.0 = Release|Any CPU
+		{60B235B0-D91C-4F42-86DF-2FC8E5BB2C17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{60B235B0-D91C-4F42-86DF-2FC8E5BB2C17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{60B235B0-D91C-4F42-86DF-2FC8E5BB2C17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{60B235B0-D91C-4F42-86DF-2FC8E5BB2C17}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8D69C56D-B16D-4175-BE38-D10D3FEAF081}
+	EndGlobalSection
+EndGlobal
