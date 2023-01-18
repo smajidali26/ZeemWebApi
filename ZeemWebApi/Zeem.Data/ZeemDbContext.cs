@@ -1,10 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Data.Entity.Infrastructure;
+using System.Data.Entity.ModelConfiguration;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Zeem.Core;
 using Zeem.Data.Mapping;
 
@@ -18,25 +15,23 @@ namespace Zeem.Data
         #endregion
 
         #region Ctor
-
+        public ZeemDbContext(DbContextOptions<ZeemDbContext> dbContextOptions)
+           : base(dbContextOptions)
+        {
+                        
+        }
         #endregion
-        
+
         #region Methods
-        
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             var typesToRegister = Assembly.GetExecutingAssembly().GetTypes()
             .Where(type => !string.IsNullOrEmpty(type.Namespace))
             .Where(type => type.BaseType != null && type.BaseType.IsGenericType &&
                 type.BaseType.GetGenericTypeDefinition() == typeof(ZeemEntityTypeConfiguration<>));
-            foreach (var type in typesToRegister)
-            {
-                dynamic configurationInstance = Activator.CreateInstance(type);
-                modelBuilder.ApplyConfiguration(configurationInstance);
-            }
-            //...or do it manually below. For example,
-            //modelBuilder.Configurations.Add(new LanguageMap());
-
+            
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ZeemDbContext).Assembly);
             base.OnModelCreating(modelBuilder);
         }
 
@@ -52,6 +47,11 @@ namespace Zeem.Data
         DbSet<TEntity> IDbContext.Set<TEntity>()
         {
             return base.Set<TEntity>();
+        }
+
+        public async Task<int> SaveChangesAsync()
+        {
+            return await base.SaveChangesAsync();
         }
 
         #endregion

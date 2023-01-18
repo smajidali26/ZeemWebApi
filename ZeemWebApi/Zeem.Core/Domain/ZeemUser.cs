@@ -23,6 +23,5 @@
         public bool IsLocked { get; set; }
 
         public ZeemUserRole UserRole { get; set; }
-
     }
 }

@@ -18,6 +18,12 @@ namespace Zeem.Data
         /// <param name="entity">Entity</param>
         void Detach(object entity);
 
-        
+        /// <summary>
+        /// Save changes
+        /// </summary>
+        /// <returns>Result</returns>
+        Task<int> SaveChangesAsync();
+
+
     }
 }

@@ -4,6 +4,6 @@
     {
         public string RoleName { get; set; }
 
-        public ZeemUserRole UserRole { get; set; }
+        public virtual ZeemUserRole UserRole { get; set; }
     }
 }

@@ -1,4 +1,9 @@
-﻿using System.Linq.Expressions;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Zeem.Core.Data
 {
@@ -9,9 +14,14 @@ namespace Zeem.Core.Data
         /// </summary>
         /// <param name="id">Identifier</param>
         /// <returns>Entity</returns>
-        T GetById(object id);
+        Task<T> GetById(int id);
 
-        ICollection<T> Get(Expression<Func<T, bool>> predicate);
+        /// <summary>
+        /// Get Objects by predicate expression
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        Task<ICollection<T>> Get(Expression<Func<T, bool>> predicate);
 
         /// <summary>
         /// Insert entity
@@ -29,7 +39,7 @@ namespace Zeem.Core.Data
         /// Update entity
         /// </summary>
         /// <param name="entity">Entity</param>-
-        Task<int> Update(T entity);
+        Task Update(T entity);
 
         /// <summary>
         /// Update entities
@@ -38,10 +48,24 @@ namespace Zeem.Core.Data
         Task Update(IEnumerable<T> entities);
 
         /// <summary>
+        /// Soft Delete entity
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
+        Task SoftDelete(T entity);
+
+        /// <summary>
+        /// Soft delete list of entities
+        /// </summary>
+        /// <param name="entities"></param>
+        /// <returns></returns>
+        Task SoftDelete(IEnumerable<T> entities);
+
+        /// <summary>
         /// Delete entity
         /// </summary>
         /// <param name="entity">Entity</param>
-        Task<int> Delete(T entity);
+        Task Delete(T entity);
 
         /// <summary>
         /// Delete entities
