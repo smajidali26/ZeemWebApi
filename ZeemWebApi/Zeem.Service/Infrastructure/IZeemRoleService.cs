@@ -8,6 +8,8 @@ namespace Zeem.Service.Infrastructure
 
         Task<ZeemRole> GetRoleByName(string roleName);
 
+        ZeemRole GetSelfRegistrationRole();
+
         Task<ICollection<ZeemRole>> GetRolesByIds(int[] ids);
     }
 }

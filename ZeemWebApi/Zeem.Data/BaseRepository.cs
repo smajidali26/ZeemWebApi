@@ -1,10 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using Zeem.Core;
 using Zeem.Core.Data;
 using Zeem.Core.Exception;
@@ -68,7 +63,9 @@ namespace Zeem.Data
 #pragma warning restore CS8603 // Possible null reference return.
         }
 
-        public async Task<ICollection<TEntity>> Get(Expression<Func<TEntity, bool>> predicate)
+        public async Task<TEntity> Get(Expression<Func<TEntity, bool>> predicate) => await Entities.Where(predicate).FirstOrDefaultAsync();
+
+        public async Task<ICollection<TEntity>> GetList(Expression<Func<TEntity, bool>> predicate)
         {
             return await Entities.Where(predicate).ToListAsync();
         }

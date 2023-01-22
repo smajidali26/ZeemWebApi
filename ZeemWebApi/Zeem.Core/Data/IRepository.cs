@@ -17,11 +17,18 @@ namespace Zeem.Core.Data
         Task<T> GetById(int id);
 
         /// <summary>
+        /// Get Object by predicate expression
+        /// </summary>
+        /// <param name="predicate"></param>
+        /// <returns></returns>
+        Task<T> Get(Expression<Func<T, bool>> predicate);
+
+        /// <summary>
         /// Get Objects by predicate expression
         /// </summary>
         /// <param name="predicate"></param>
         /// <returns></returns>
-        Task<ICollection<T>> Get(Expression<Func<T, bool>> predicate);
+        Task<ICollection<T>> GetList(Expression<Func<T, bool>> predicate);
 
         /// <summary>
         /// Insert entity

@@ -36,6 +36,11 @@ namespace Zeem.Service.Implementation
             return await _repository.Table.FirstOrDefaultAsync(x=>x.RoleName.Equals(roleName));
         }
 
+        public ZeemRole GetSelfRegistrationRole()
+        {
+            return _repository.Table.FirstOrDefault(x => x.SelfRegistrationRole);
+        }
+
         public async Task<ICollection<ZeemRole>> GetRolesByIds(int[] ids)
         {
             return await _repository.Table.Where(x => ids.Contains(x.Id)).ToListAsync();

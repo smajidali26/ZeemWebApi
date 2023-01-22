@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Zeem.Core.Data;
 using Zeem.Core.Infrastructure;
 using Zeem.Data;
-using Microsoft.Extensions.DependencyInjection;
 using Zeem.Service.Infrastructure;
+using ZeemFacade.Framework;
 using ZeemFacade.Infrastructure;
 
 namespace ZeemWebApi.Registrar
@@ -35,6 +36,31 @@ namespace ZeemWebApi.Registrar
             services.AddControllers().AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
             );
+
+            //find mapper configurations provided by other assemblies
+            var type = typeof(IOrderedMapperProfile);
+            var mapperConfigurations = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(s => s.FullName.StartsWith("Zeem"))
+                .SelectMany(s => s.GetTypes().Where(x => x.IsClass && !x.IsAbstract))
+                .Where(p => type.IsAssignableFrom(p));
+            //create and sort instances of mapper configurations
+            var instances = mapperConfigurations
+                .Select(mapperConfiguration => (IOrderedMapperProfile)Activator.CreateInstance(mapperConfiguration))
+                .OrderBy(mapperConfiguration => mapperConfiguration.Order);
+
+            //create AutoMapper configuration
+            var config = new MapperConfiguration(cfg =>
+            {
+                foreach (var instance in instances)
+                {
+                    cfg.AddProfile(instance.GetType());
+                }
+
+            });
+
+            //register
+            AutoMapperConfiguration.Init(config);
+
             return services;
         }
     }
