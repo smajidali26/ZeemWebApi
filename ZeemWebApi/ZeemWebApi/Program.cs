@@ -3,7 +3,7 @@ using ZeemWebApi.Registrar;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
+builder.Services.AddHttpContextAccessor();
 builder.Services.RegisterDependencies(builder.Configuration);
 
 builder.Services.AddControllers();

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Zeem.DomainContracts.ViewModel.Response
+﻿namespace Zeem.DomainContracts.ViewModel.Response
 {
     public class UserResponse : BaseResponseEntityModel
     {

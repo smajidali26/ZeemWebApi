@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Zeem.Core;
 using Zeem.Core.Data;
 using Zeem.Core.Infrastructure;
 using Zeem.Data;
@@ -14,6 +15,7 @@ namespace ZeemWebApi.Registrar
         public static IServiceCollection RegisterDependencies(this IServiceCollection services, IConfiguration configuration)
         {
             var zeemConfig = configuration.GetSection("ZeemConfigurations").Get<ZeemConfig>();
+            services.AddSingleton(zeemConfig);
             // Register database
             var optionsBuilder = new DbContextOptionsBuilder<ZeemDbContext>();
             optionsBuilder.UseSqlServer(zeemConfig.ConnectionString);
@@ -36,6 +38,7 @@ namespace ZeemWebApi.Registrar
             services.AddControllers().AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
             );
+            services.AddScoped<IHeaderValue, HeaderValue>();
 
             //find mapper configurations provided by other assemblies
             var type = typeof(IOrderedMapperProfile);

@@ -1,4 +1,8 @@
-﻿using Zeem.Core;
+﻿using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Zeem.Core;
 using Zeem.Core.Domain;
 using Zeem.Core.Exception;
 using Zeem.Core.Infrastructure;
@@ -20,13 +24,19 @@ namespace ZeemFacade.Implementation
 
         private readonly IZeemUserRoleService _zeemUserRoleService;
 
+        private readonly IHeaderValue _headerValue;
+
+        private readonly ZeemConfig _zeemConfig;
+
         #endregion
 
         #region Ctor
 
-        public ZeemUserFacade(IZeemUserService zeemUserService, IZeemRoleService zeemRoleService
-            , IZeemUserRoleService zeemUserRoleService)
+        public ZeemUserFacade(IHeaderValue headerValue, ZeemConfig zeemConfig, IZeemUserService zeemUserService
+            , IZeemRoleService zeemRoleService , IZeemUserRoleService zeemUserRoleService)
         {
+            _zeemConfig = zeemConfig;
+            _headerValue = headerValue;
             _zeemUserService = zeemUserService;
             _zeemRoleService = zeemRoleService;
             _zeemUserRoleService = zeemUserRoleService;
@@ -61,15 +71,15 @@ namespace ZeemFacade.Implementation
             entity.Password = CommonFunctions.GetHash(entity.Password);
 
             await _zeemUserService.CreateUser(entity);
+            var userRole = new ZeemUserRole();
+            userRole.UserId = entity.Id;
+            userRole.CreatedBy = entity.CreatedBy;
 
-            var selfRole = _zeemRoleService.GetSelfRegistrationRole();
-
-            var userRole = new ZeemUserRole()
+            if (_headerValue.CurrentUser == null)  // When user is created through sign up form.
             {
-                UserId = entity.Id,
-                RoleId = selfRole.Id,
-                CreatedBy= entity.Id
-            };
+                var selfRole = _zeemRoleService.GetSelfRegistrationRole();
+                userRole.RoleId= selfRole.Id;
+            }
 
             await _zeemUserRoleService.InsertUserRole(userRole);
             
@@ -78,7 +88,33 @@ namespace ZeemFacade.Implementation
         public async Task<UserResponse> GetUserById(int userId)
         {
             var user = await _zeemUserService.GetUserById(userId);
+
+            var token = GenerateJwtToken(user);
             return user.ToModel<UserResponse>();
         }
+
+
+        #region Private Methods
+
+        private string GenerateJwtToken(ZeemUser user)
+        {
+            // generate token that is valid for 2 hours
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_zeemConfig.SecretKeyForToken);
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[] { new Claim("id", user.Id.ToString())
+                        , new Claim("firstname", user.FirstName)
+                        , new Claim("lastname", user.LastName)
+                        , new Claim("email", user.Email)
+                }),
+                Expires = DateTime.UtcNow.AddDays(7),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+            var token = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(token);
+        }
+
+        #endregion
     }
 }

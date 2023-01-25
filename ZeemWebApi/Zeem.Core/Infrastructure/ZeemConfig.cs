@@ -3,5 +3,7 @@
     public class ZeemConfig
     {
         public string ConnectionString { get; set; }
+
+        public string SecretKeyForToken { get; set; }
     }
 }
