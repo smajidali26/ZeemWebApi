@@ -7,6 +7,8 @@ namespace ZeemFacade.Infrastructure
     {
         Task RegisterUser(UserRegistration userRegistration);
 
+        Task<string> AuthenticateUser(UserAuthentication userAuthentication);
+
         Task<UserResponse> GetUserById(int userId);
     }
 }

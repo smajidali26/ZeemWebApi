@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using Zeem.Core;
 using Zeem.Core.Data;
 using Zeem.Core.Infrastructure;
@@ -64,6 +67,24 @@ namespace ZeemWebApi.Registrar
             //register
             AutoMapperConfiguration.Init(config);
 
+            services.AddAuthentication(opt =>
+            {
+                opt.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                opt.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = zeemConfig.ValidIssuer,
+                        ValidAudience = zeemConfig.ValidAudience,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(zeemConfig.SecretKeyForToken))
+                    };
+                });
             return services;
         }
     }

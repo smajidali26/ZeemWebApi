@@ -85,11 +85,26 @@ namespace ZeemFacade.Implementation
             
         }
 
+        public async Task<string> AuthenticateUser(UserAuthentication userAuthentication)
+        {
+            var predicate = PredicateBuilder.True<ZeemUser>();
+            predicate = predicate.And(x => x.Username.Equals(userAuthentication.Username));
+           var dbEntity = await _zeemUserService.GetUser(predicate);
+            if (!dbEntity.MobileNumberVerified)
+                throw new ZeemValidationException("Mobile number not varified.",(int)ErrorCode.UserAuthentication_Mobile_Not_Verified);
+            if (!dbEntity.EmailVerified)
+                throw new ZeemValidationException("Email not varified.", (int)ErrorCode.UserAuthentication_Email_Not_Verified);
+            if (dbEntity.IsLocked)
+                throw new ZeemValidationException("User is locked. Please contact administrator.", (int)ErrorCode.UserAuthentication_User_Is_Locked);
+            if(!CommonFunctions.GetHash(userAuthentication.Password).Equals(dbEntity.Password))
+                throw new ZeemValidationException("Invalid username or password.", (int)ErrorCode.UserAuthentication_Invalid_Username_Or_Password);
+            return GenerateJwtToken(dbEntity);
+        }
+
         public async Task<UserResponse> GetUserById(int userId)
         {
             var user = await _zeemUserService.GetUserById(userId);
 
-            var token = GenerateJwtToken(user);
             return user.ToModel<UserResponse>();
         }
 
@@ -108,6 +123,8 @@ namespace ZeemFacade.Implementation
                         , new Claim("lastname", user.LastName)
                         , new Claim("email", user.Email)
                 }),
+                Audience = _zeemConfig.ValidAudience,
+                Issuer = _zeemConfig.ValidIssuer,
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
