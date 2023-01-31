@@ -21,7 +21,9 @@ namespace ZeemWebApi.Registrar
             services.AddSingleton(zeemConfig);
             // Register database
             var optionsBuilder = new DbContextOptionsBuilder<ZeemDbContext>();
-            optionsBuilder.UseSqlServer(zeemConfig.ConnectionString);
+            optionsBuilder.UseSqlServer(zeemConfig.ConnectionString,builder => { 
+                builder.EnableRetryOnFailure(5, TimeSpan.FromSeconds(10), null);
+            });
             services.AddScoped<IDbContext>(context => new ZeemDbContext(optionsBuilder.Options));
 
             services.AddScoped(typeof(IRepository<>), typeof(BaseRepository<>));
